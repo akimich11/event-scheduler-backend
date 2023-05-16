@@ -1,0 +1,763 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/score4more-system/score4more-internal/1.0.0
+info:
+  version: "1.0.0"
+  title: Event scheduler API
+
+paths:
+  /healthcheck:
+    get:
+      summary: Check if server is up
+      tags:
+        - session
+      responses:
+        '200':
+          description: OK
+  /login:
+    post:
+      summary: Login and get session key
+      tags:
+        - session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionToken:
+                    type: string
+
+        '400':
+          description: Errors field contains technical errors e.g. database errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+
+
+  /logout:
+    post:
+      summary: Logout action
+      tags:
+        - session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionToken:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+
+
+  /events:
+    post:
+      summary: Create event
+      tags:
+        - plans
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+                  example: undefined
+                name:
+                  type: string
+                participants:
+                  type: string
+                repeat:
+                  type: string
+                  enum: [ none, everyday, weekly, twice_a_month, monthly, yearly ]
+                category:
+                  type: string
+                  enum: [ home, work, relationships, education, health, sport, entertaiment ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plans:
+                    type: object
+                    properties:
+                      none:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ none ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                      everyday:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ everyday ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      weekly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ weekly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      twice_a_month:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              example: undefined
+                              format: date
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ twice_a_month ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      monthly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ monthly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      yearly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ yearly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+
+        '400':
+          description: Errors field contains technical errors e.g. database errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+    delete:
+      summary: Delete event from table
+      tags:
+        - plans
+      parameters:
+        - in: path
+          name: event_id
+          schema:
+            type: string
+          required: true
+          description: Id of the event
+
+      responses:
+        '204':
+          description: OK
+
+  /events/{event_id}:
+    patch:
+      summary: Updates event
+      tags:
+        - plans
+      parameters:
+        - in: path
+          name: event_id
+          schema:
+            type: string
+          required: true
+          description: Id of the event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                  example: undefined
+                name:
+                  type: string
+                participants:
+                  type: string
+                repeat:
+                  type: string
+                  enum: [ none, everyday, weekly, twice_a_minth, monthly, yearly ]
+                category:
+                  type: string
+                  enum: [ home, work, relationships, education, health, sport, entertaiment ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plans:
+                    type: object
+                    properties:
+                      none:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ none ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                      everyday:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ everyday ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      weekly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ weekly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      twice_a_month:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ twice_a_month ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      monthly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ monthly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+                      yearly:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            startDate:
+                              type: string
+                              format: date
+                            endDate:
+                              type: string
+                              format: date
+                              example: undefined
+                            name:
+                              type: string
+                            participants:
+                              type: string
+                            repeat:
+                              type: string
+                              enum: [ yearly ]
+                            category:
+                              type: string
+                              enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                            completeDates:
+                              type: array
+                              items:
+                                type: string
+                                format: date
+
+        '400':
+          description: Errors field contains technical errors e.g. database errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+
+  /events/{event_id}/complete:
+    patch:
+      summary: Complete event in exact day
+      tags:
+        - plans
+      parameters:
+        - in: path
+          name: event_id
+          schema:
+            type: string
+          required: true
+          description: Id of the event
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  none:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ none ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                  everyday:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ everyday ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                        completeDates:
+                          type: array
+                          items:
+                            type: string
+                            format: date
+                  weekly:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ weekly ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                        completeDates:
+                          type: array
+                          items:
+                            type: string
+                            format: date
+                  twice_a_month:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ twice_a_month ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                        completeDates:
+                          type: array
+                          items:
+                            type: string
+                            format: date
+                  monthly:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ monthly ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                        completeDates:
+                          type: array
+                          items:
+                            type: string
+                            format: date
+                  yearly:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        startDate:
+                          type: string
+                          format: date
+                        endDate:
+                          type: string
+                          format: date
+                          example: undefined
+                        name:
+                          type: string
+                        participants:
+                          type: string
+                        repeat:
+                          type: string
+                          enum: [ yearly ]
+                        category:
+                          type: string
+                          enum: [ home, work, relationships, education, health, sport, entertaiment ]
+                        completeDates:
+                          type: array
+                          items:
+                            type: string
+                            format: date
+        '400':
+          description: Errors field contains technical errors e.g. database errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string

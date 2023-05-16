@@ -1,16 +1,14 @@
-from flask import Flask
-from sqlalchemy import create_engine
-from database.utils import compose_db_url
+from src.views import app
+from src.views.auth import auth
+from src.views.plans import plans
 
-
-database_url = compose_db_url()
-engine = create_engine(database_url)
-app = Flask(__name__)
+app.register_blueprint(auth)
+app.register_blueprint(plans)
 
 
 @app.route('/')
-def healthcheck():
-    return 'Successful deployment!'
+def root():
+    return f'This is the API root'
 
 
 if __name__ == '__main__':
