@@ -11,3 +11,4 @@ python-dotenv==1.0.0
 SQLAlchemy==1.4.46
 flask-login==0.6.2
 jsonschema==4.17.3
+flask_cors==3.0.10

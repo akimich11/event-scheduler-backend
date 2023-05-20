@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_login import LoginManager
 from sqlalchemy import create_engine
 
@@ -14,5 +15,6 @@ db_adapter = DBAdapter(engine)
 Base.metadata.create_all(engine)
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = 'acsnlhufeuncoq39840394vjnsdc89493'
 login_manager.init_app(app)
