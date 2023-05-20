@@ -15,6 +15,6 @@ db_adapter = DBAdapter(engine)
 Base.metadata.create_all(engine)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 app.secret_key = 'acsnlhufeuncoq39840394vjnsdc89493'
 login_manager.init_app(app)
