@@ -16,8 +16,7 @@ Base.metadata.create_all(engine)
 
 app = Flask(__name__)
 app.config.update(
-    SESSION_COOKIE_SAMESITE='None',
-    SESSION_COOKIE_SECURE='True'
+    SESSION_COOKIE_SAMESITE='None'
 )
 CORS(app, supports_credentials=True, expose_headers=['Set-Cookie'])
 app.secret_key = 'acsnlhufeuncoq39840394vjnsdc89493'
