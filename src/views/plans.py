@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 
 from flask import Blueprint, Response, request
-from flask_login import login_required, current_user
 from jsonschema.exceptions import ValidationError
 
 from src.errors.object_not_found_error import ObjectNotFoundError
@@ -15,14 +14,13 @@ plans = Blueprint('plans', __name__)
 
 @plans.route('/events', methods=['POST'])
 @check_content_type
-@login_required
 def create_event():
     body = request.json
     try:
         validate_event_data_request_body(body)
         start_date = datetime.fromisoformat(body['startDate'])
         end_date = datetime.fromisoformat(body['endDate']) if 'endDate' in body else None
-        plan = db_adapter.create_plan(user_id=current_user.get_id(),
+        plan = db_adapter.create_plan(user_id=body['user_id'],
                                       name=body['name'],
                                       start_date=start_date,
                                       end_date=end_date,

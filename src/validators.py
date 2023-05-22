@@ -7,6 +7,7 @@ def validate_event_data_request_body(request_body: dict) -> None:
     schema = {
         "type": "object",
         "properties": {
+            "user_id": {"type": "integer"},
             "name": {"type": "string"},
             "startDate": {"type": "string"},
             "endDate": {"type": "string"},
@@ -14,7 +15,7 @@ def validate_event_data_request_body(request_body: dict) -> None:
             "category": {"enum": ["home", "work", "relationships", "education", "health", "sport", "entertainment"]},
             "repeat": {"enum": [None, "everyday", "weekly", "twice_a_month", "monthly", "yearly"]},
         },
-        "required": ["name", "startDate", "category", "participants", "repeat"],
+        "required": ["user_id", "name", "startDate", "category", "participants", "repeat"],
         "additionalProperties": False
     }
     jsonschema.validate(instance=request_body, schema=schema)

@@ -15,10 +15,6 @@ db_adapter = DBAdapter(engine)
 Base.metadata.create_all(engine)
 
 app = Flask(__name__)
-app.config.update(
-    SESSION_COOKIE_SAMESITE='None',
-    SESSION_COOKIE_SECURE='False'
-)
-CORS(app, supports_credentials=True, expose_headers=['Set-Cookie'])
+CORS(app)
 app.secret_key = 'acsnlhufeuncoq39840394vjnsdc89493'
 login_manager.init_app(app)
