@@ -1,4 +1,3 @@
-from flask_login import UserMixin
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
@@ -13,8 +12,9 @@ from sqlalchemy import (
 Base = declarative_base()
 
 
-class User(UserMixin, Base):
-    __tablename__ = 'user'
+class User(Base):
+    __tablename__ = "user"
+
     id = Column(Integer, primary_key=True)
     username = Column(String(64), unique=True)
     password = Column(String(128))
@@ -23,49 +23,32 @@ class User(UserMixin, Base):
         return str(self.id)
 
 
-class Plan(Base):
-    __tablename__ = "plan"
+class Event(Base):
+    __tablename__ = "event"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
+    start_date = Column(DateTime(timezone=True))
+    end_date = Column(DateTime(timezone=True))
     participants = Column(String(255))
     user_id = Column(Integer, ForeignKey("user.id"))
     category_id = Column(Integer, ForeignKey("category.id"))
     status_id = Column(Integer, ForeignKey("status.id"))
     repeat_interval_id = Column(Integer, ForeignKey("repeat_interval.id"))
 
-    user = relationship("User", foreign_keys="Plan.user_id", backref="plans")
-    category = relationship("Category", foreign_keys="Plan.category_id", backref="plans")
-    status = relationship("Status", foreign_keys="Plan.status_id", backref="plans")
-    repeat_interval = relationship("RepeatInterval", foreign_keys="Plan.repeat_interval_id", backref="plans")
+    user = relationship("User", foreign_keys="Event.user_id", backref="events")
+    category = relationship("Category", foreign_keys="Event.category_id", backref="events")
+    status = relationship("Status", foreign_keys="Event.status_id", backref="events")
+    repeat_interval = relationship("RepeatInterval", foreign_keys="Event.repeat_interval_id", backref="events")
 
     def to_json(self) -> dict:
-        intervals = [event.to_interval() for event in self.events]
         return {
             'id': self.id,
             'name': self.name,
             'category': self.category.name,
             'participants': self.participants,
-            'status': self.status.name if self.status else None,
-            'intervals': intervals
+            'status': self.status.name if self.status else None
         }
-
-
-class Event(Base):
-    __tablename__ = "event"
-
-    id = Column(Integer, primary_key=True)
-    start_date = Column(DateTime(timezone=True))
-    end_date = Column(DateTime(timezone=True))
-    plan_id = Column(Integer, ForeignKey("plan.id"))
-
-    plan = relationship("Plan", foreign_keys="Event.plan_id", backref="events")
-
-    def to_interval(self) -> dict:
-        return [
-            self.start_date.astimezone().isoformat(),
-            self.end_date.astimezone().isoformat() if self.end_date else None
-        ]
 
 
 class Category(Base):

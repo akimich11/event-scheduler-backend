@@ -3,8 +3,8 @@ from typing import Optional
 
 from flask_login import login_user
 from sqlalchemy.orm import sessionmaker
-from src.database.models import User, Category, RepeatInterval, Plan, Event
-from src.errors.object_not_found_error import CategoryNotFoundError, IntervalNotFoundError
+from ..database.models import User, Category, RepeatInterval, Event
+from ..errors.object_not_found_error import CategoryNotFoundError, IntervalNotFoundError
 
 
 class DBAdapter:
@@ -29,7 +29,7 @@ class DBAdapter:
                     start_date: datetime,
                     end_date: Optional[datetime] = None,
                     repeat_interval: Optional[str] = None,
-                    participants: Optional[str] = None) -> Plan:
+                    participants: Optional[str] = None) -> Event:
         user = self.get_user(user_id)
         category = self.session.query(Category).filter_by(name=category_name).first()
         if not category:
@@ -38,14 +38,11 @@ class DBAdapter:
         if not interval:
             raise IntervalNotFoundError(f'Repeat interval "{repeat_interval}" was not found in database')
 
-        plan = Plan(name=name,
-                    user=user,
-                    category=category,
-                    repeat_interval=interval,
-                    participants=participants)
-        event = Event(start_date=start_date,
-                      end_date=end_date,
-                      plan=plan)
-        self.session.add_all([plan, event])
+        plan = Event(name=name,
+                     user=user,
+                     category=category,
+                     repeat_interval=interval,
+                     participants=participants)
+        self.session.add_all(plan)
         self.session.commit()
         return plan
