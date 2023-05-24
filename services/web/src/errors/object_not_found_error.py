@@ -8,3 +8,7 @@ class CategoryNotFoundError(ObjectNotFoundError):
 
 class IntervalNotFoundError(ObjectNotFoundError):
     pass
+
+
+class StatusNotFoundError(ObjectNotFoundError):
+    pass

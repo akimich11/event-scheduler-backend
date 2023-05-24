@@ -28,8 +28,7 @@ class Event(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    start_date = Column(DateTime(timezone=True))
-    end_date = Column(DateTime(timezone=True))
+    date = Column(DateTime(timezone=True))
     participants = Column(String(255))
     user_id = Column(Integer, ForeignKey("user.id"))
     category_id = Column(Integer, ForeignKey("category.id"))
@@ -45,6 +44,7 @@ class Event(Base):
         return {
             'id': self.id,
             'name': self.name,
+            'date': self.date.isoformat(),
             'category': self.category.name,
             'participants': self.participants,
             'status': self.status.name if self.status else None
