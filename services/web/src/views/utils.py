@@ -22,16 +22,19 @@ def create_event(body):
 
 def get_events(body):
     validate_get_events_request_body(body)
+    end_date = None
+    if 'endDate' in body and body['endDate'] is not None:
+        end_date = datetime.fromisoformat(body['endDate'])
     return db_adapter.get_events(user_id=1,
                                  event_name=body['name'],
                                  start_date=datetime.fromisoformat(body['startDate']),
-                                 end_date=datetime.fromisoformat(body['endDate']) if 'endDate' in body else None)
+                                 end_date=end_date)
 
 
 def update_event(body):
     validate_update_events_request_body(body)
     return db_adapter.update_event(user_id=1,
-                                   name=body['name'],
+                                   event_name=body['name'],
                                    start_date=datetime.fromisoformat(body['startDate']),
                                    end_date=datetime.fromisoformat(
                                        body['endDate']) if 'endDate' in body else None,

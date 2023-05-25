@@ -55,7 +55,7 @@ class DBAdapter:
         while current_datetime <= end_date:
             events.append(Event(name=name,
                                 user=user,
-                                date=start_date,
+                                date=current_datetime,
                                 category=category,
                                 repeat_interval=interval,
                                 participants=participants))
@@ -80,15 +80,15 @@ class DBAdapter:
     def get_events(self,
                    user_id: int,
                    event_name: str,
-                   start_date: Optional[datetime] = None,
-                   end_date: Optional[datetime] = None) -> list[dict]:
+                   start_date: datetime,
+                   end_date: datetime) -> list[dict]:
         user = self.get_user(user_id)
         events = self.session.query(Event).filter(
             Event.user == user,
             Event.name == event_name,
-            Event.start_date >= start_date,
-            Event.end_date <= end_date
-        ).all()
+            Event.date >= start_date,
+            Event.date <= end_date
+        ).order_by(Event.date).all()
 
         return events
 
@@ -103,7 +103,7 @@ class DBAdapter:
 
     def _update_dates(self, events: list[Event], start_date: datetime, end_date: datetime) -> None:
         for event in events:
-            if event.date < start_date or (end_date is not None and event.date > end_date):
+            if event.date < start_date or event.date > end_date:
                 self.session.delete(event)
         self.session.commit()
 
@@ -126,18 +126,13 @@ class DBAdapter:
                 if not category:
                     raise CategoryNotFoundError(f'Category "{new_data["category"]}" was not found in database')
                 event.category = category
-            if 'interval' in new_data:
-                interval = self.session.query(RepeatInterval).filter_by(name=new_data["interval"]).first()
-                if not interval:
-                    raise IntervalNotFoundError(f'Repeat interval "{new_data["interval"]}" was not found in database')
-                event.repeat_interval = interval
             if 'participants' in new_data:
                 event.participants = new_data['participants']
 
         self.session.commit()
-        if 'start_date' in new_data:
-            start_date = new_data['start_date']
-        if 'end_date' in new_data:
-            end_date = new_data['end_date']
+        if 'startDateNew' in new_data:
+            start_date = datetime.fromisoformat(new_data['startDateNew'])
+        if 'endDateNew' in new_data:
+            end_date = datetime.fromisoformat(new_data['endDateNew'])
         self._update_dates(events, start_date, end_date)
         return self.get_events(user_id, event_name, start_date, end_date)

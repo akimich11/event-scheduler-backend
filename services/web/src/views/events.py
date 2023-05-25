@@ -14,7 +14,7 @@ from ..decorators import check_content_type
 events_api = Blueprint('events', __name__)
 
 
-@events_api.route("/")
+@events_api.route("/healthcheck")
 def hello_world():
     return f'This is the API root'
 
